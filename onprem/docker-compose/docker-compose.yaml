@@ -1,0 +1,86 @@
+services:
+  model-dl:
+    image: google/cloud-sdk:slim
+    volumes:
+      - models:/models
+    entrypoint: /bin/bash
+    command: -c "
+      if [ ! -d /models/f4e44a731f7df858 ] || \
+      [ ! -d /models/6f697701fc10ce13 ] || \
+      [ ! -d /models/fc0dfb12fad78f07 ] || \
+      [ ! -d /models/750dac66af62e6b2 ] || \
+      [ ! -d /models/2ac3470c50c2bd40 ] || \
+      [ ! -d /models/26a3a230499ebb48 ] || \
+      [ ! -d /models/077c98276e7ae1a0 ] || \
+      [ ! -d /models/ba5c6de27f689d2d ] || \
+      [ ! -d /models/3c27c64bd11d5643 ] || \
+      [ ! -d /models/3e6af30a46c1d7f8 ] || \
+      [ ! -d /models/5b95ceada85e81f4 ] || \
+      [ ! -d /models/c29a4e1634c75efd ] || \
+      [ ! -d /models/941dd88da7fc2dbe ] || \
+      [ ! -d /models/54aae1ca6f0d5eae ] || \
+      [ ! -d /models/e4e037194ec6f091 ] || \
+      [ ! -d /models/a062e0a2781b3d55 ] || \
+      [ ! -d /models/fe0a2140c6ad6f29 ]; then \
+      gsutil -m cp -r \
+      gs://idnorm-models-enc/f4e44a731f7df858 \
+      gs://idnorm-models-enc/6f697701fc10ce13 \
+      gs://idnorm-models-enc/fc0dfb12fad78f07 \
+      gs://idnorm-models-enc/750dac66af62e6b2 \
+      gs://idnorm-models-enc/2ac3470c50c2bd40 \
+      gs://idnorm-models-enc/26a3a230499ebb48 \
+      gs://idnorm-models-enc/077c98276e7ae1a0 \
+      gs://idnorm-models-enc/ba5c6de27f689d2d \
+      gs://idnorm-models-enc/3c27c64bd11d5643 \
+      gs://idnorm-models-enc/3e6af30a46c1d7f8 \
+      gs://idnorm-models-enc/5b95ceada85e81f4 \
+      gs://idnorm-models-enc/c29a4e1634c75efd \
+      gs://idnorm-models-enc/941dd88da7fc2dbe \
+      gs://idnorm-models-enc/54aae1ca6f0d5eae \
+      gs://idnorm-models-enc/e4e037194ec6f091 \
+      gs://idnorm-models-enc/a062e0a2781b3d55 \
+      gs://idnorm-models-enc/fe0a2140c6ad6f29 \
+      /models; \
+      else \
+      echo 'All model folders already exist, skipping copy.'; \
+      fi"
+  serving:
+    image: us-central1-docker.pkg.dev/idnorm/idnorm-pub/serving:v0.1.1-skylake
+    depends_on:
+      model-dl:
+        condition: service_completed_successfully
+    environment:
+      VD_DEC: "1"
+    command:
+      - "--model_config_file=/config/model-config"
+      # setting this to expected number of max concurrent requests
+      - "--tensorflow_inter_op_parallelism=20"
+      # number of CPUs seems to be a good value
+      - "--tensorflow_intra_op_parallelism=8"
+      # setting this to expected number of max concurrent requests x 2 to
+      # adjust for "waiting" for resources to become available
+      - "--grpc_max_threads=200"
+    ports:
+      - "8500:8500" # Expose port 8500 (default port for TensorFlow Serving gRPC)
+    volumes:
+      - models:/models # Use named volume 'models' instead of host mount
+      - ./models.config:/config/model-config:ro
+    deploy:
+      resources:
+        limits:
+          memory: 3G
+          cpus: 8.0
+
+  docver:
+    image: us-central1-docker.pkg.dev/idnorm/idnorm-pub/dv:${DV_VERSION}
+    environment:
+      DV_LICENSE_KEY: ${DV_LICENSE_KEY}
+    depends_on:
+      - serving
+    command: ["--serving-url", "serving:8500"]
+    ports:
+      - "${DV_GRPC_PORT}:8005" # grpc
+      - "${DV_HTTP_PORT}:8000" # http
+
+volumes:
+  models:
