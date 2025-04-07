@@ -1,0 +1,599 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "proto/dv/v1/iq.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "VerificationService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/verify": {
+      "post": {
+        "summary": "Verifies a document (one sided or two sided)",
+        "operationId": "VerificationService_VerifyDocument",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1VerificationResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1VerificationRequest"
+            }
+          }
+        ],
+        "tags": [
+          "VerificationService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "DigitalTemperingCheckLevel": {
+      "type": "string",
+      "enum": [
+        "NOT_DETECTED",
+        "LIKELY",
+        "CONFIRMED"
+      ],
+      "default": "NOT_DETECTED"
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1BarcodeCheck": {
+      "type": "object",
+      "properties": {
+        "missing": {
+          "type": "boolean",
+          "title": "Barcode is required but missing"
+        },
+        "hasAnomalies": {
+          "type": "boolean",
+          "title": "Anomalies detected in the barcode present on the document. This indicates serious validity issues with the document"
+        }
+      },
+      "title": "Checks for the document barcode"
+    },
+    "v1BlurConfidenceLevel": {
+      "type": "string",
+      "enum": [
+        "BLUR_LEVEL_0C",
+        "BLUR_LEVEL_1C",
+        "BLUR_LEVEL_2C",
+        "BLUR_LEVEL_3C",
+        "BLUR_LEVEL_4C",
+        "BLUR_LEVEL_5C",
+        "BLUR_LEVEL_6C",
+        "BLUR_LEVEL_7C"
+      ],
+      "default": "BLUR_LEVEL_0C",
+      "description": "- BLUR_LEVEL_0C: BLUR_LEVEL_0C - can be interpreted as \"no blur\"\n - BLUR_LEVEL_1C: BLUR_LEVEL_1C - (and all levels above) can be interpreted as \"blur\"\n - BLUR_LEVEL_2C: BLUR_LEVEL_2C\n - BLUR_LEVEL_3C: BLUR_LEVEL_3C\n - BLUR_LEVEL_4C: BLUR_LEVEL_4C\n - BLUR_LEVEL_5C: BLUR_LEVEL_5C\n - BLUR_LEVEL_6C: BLUR_LEVEL_6C\n - BLUR_LEVEL_7C: BLUR_LEVEL_7C",
+      "title": "Blur Confidence Level Enum, starts with level 0 that can be interpreted as \"no blur\"\nLevel 1 and above can be interpreted as \"blur\". The higher the level it means that is a higher\nconfidence in the model prediction"
+    },
+    "v1Checks": {
+      "type": "object",
+      "properties": {
+        "formatCheck": {
+          "title": "Indicates that field content has unexpected format",
+          "allOf": [
+            {
+              "$ref": "#/definitions/v1FormatCheck"
+            }
+          ]
+        },
+        "barcodeMatch": {
+          "title": "Indicates whether the read field content matches the value in the document barcode",
+          "allOf": [
+            {
+              "$ref": "#/definitions/v1MatchCheck"
+            }
+          ]
+        },
+        "mrzMatch": {
+          "title": "Indicates whether the read field content matches the value in the document MRZ",
+          "allOf": [
+            {
+              "$ref": "#/definitions/v1MatchCheck"
+            }
+          ]
+        },
+        "mandatoryFieldMissing": {
+          "type": "boolean",
+          "title": "Set to true if a field is \"mandatory\" but is missing"
+        }
+      }
+    },
+    "v1DataCheck": {
+      "type": "object",
+      "properties": {
+        "fields": {
+          "title": "All checks performed for fields",
+          "allOf": [
+            {
+              "$ref": "#/definitions/v1FieldChecks"
+            }
+          ]
+        },
+        "dates": {
+          "title": "Checks that dates on the document are valid",
+          "allOf": [
+            {
+              "$ref": "#/definitions/v1DateFieldsCheck"
+            }
+          ]
+        },
+        "mrz": {
+          "title": "Checks that MRZ is valid",
+          "allOf": [
+            {
+              "$ref": "#/definitions/v1MrzCheck"
+            }
+          ]
+        },
+        "barcode": {
+          "title": "Checks that the document barcode is valid",
+          "allOf": [
+            {
+              "$ref": "#/definitions/v1BarcodeCheck"
+            }
+          ]
+        }
+      },
+      "title": "Result of performing various data consistency and validity checks"
+    },
+    "v1DateFieldCheck": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "title": "The type of the date field",
+          "allOf": [
+            {
+              "$ref": "#/definitions/v1DateFieldType"
+            }
+          ]
+        },
+        "checks": {
+          "title": "The checks for the date field",
+          "allOf": [
+            {
+              "$ref": "#/definitions/v1Checks"
+            }
+          ]
+        }
+      }
+    },
+    "v1DateFieldType": {
+      "type": "string",
+      "enum": [
+        "TYPE_DATE_OF_BIRTH",
+        "TYPE_ISSUE_DATE",
+        "TYPE_EXPIRY_DATE",
+        "TYPE_CLASS_EFFECTIVE_DATE",
+        "TYPE_CLASS_EXPIRY_DATE"
+      ],
+      "default": "TYPE_DATE_OF_BIRTH",
+      "description": "- TYPE_DATE_OF_BIRTH: Date of birth\n - TYPE_ISSUE_DATE: Document issue date\n - TYPE_EXPIRY_DATE: Document expiry date\n - TYPE_CLASS_EFFECTIVE_DATE: Class effective date. Only for some of Australian document types that define \"classes\"\n - TYPE_CLASS_EXPIRY_DATE: Class expiry date. Only for some of Australian document types that define \"classes\"",
+      "title": "Type - an enum specifying date field types"
+    },
+    "v1DateFieldsCheck": {
+      "type": "object",
+      "properties": {
+        "notValid": {
+          "type": "boolean",
+          "title": "True if date documents on the document are irregular, meaning document is likely not valid"
+        },
+        "reason": {
+          "type": "string",
+          "title": "Descriptive error message"
+        }
+      },
+      "title": "Result of performing checks on validity of date fields. Etc, date of expiry is passed and similar\nAll these checks, if present, indicate serious validity issues with the document"
+    },
+    "v1DigitalTemperingCheck": {
+      "type": "object",
+      "properties": {
+        "level": {
+          "$ref": "#/definitions/DigitalTemperingCheckLevel"
+        }
+      }
+    },
+    "v1FieldChecks": {
+      "type": "object",
+      "properties": {
+        "textFields": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1TextFieldCheck"
+          },
+          "title": "Checks result for text fields"
+        },
+        "dateFields": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1DateFieldCheck"
+          },
+          "title": "Checks result for date fields"
+        },
+        "visualFields": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1VisualFieldCheck"
+          },
+          "title": "Checks result for visual fields"
+        },
+        "sexField": {
+          "title": "Checks result for sex field",
+          "allOf": [
+            {
+              "$ref": "#/definitions/v1Checks"
+            }
+          ]
+        }
+      }
+    },
+    "v1FormatCheck": {
+      "type": "string",
+      "enum": [
+        "FORMAT_CHECK_NOT_PERFORMED",
+        "FORMAT_CHECK_INVALID",
+        "FORMAT_CHECK_VALID"
+      ],
+      "default": "FORMAT_CHECK_NOT_PERFORMED"
+    },
+    "v1GlareConfidenceLevel": {
+      "type": "string",
+      "enum": [
+        "GLARE_LEVEL_0G",
+        "GLARE_LEVEL_1G",
+        "GLARE_LEVEL_2G",
+        "GLARE_LEVEL_3G",
+        "GLARE_LEVEL_4G",
+        "GLARE_LEVEL_5G",
+        "GLARE_LEVEL_6G",
+        "GLARE_LEVEL_7G"
+      ],
+      "default": "GLARE_LEVEL_0G",
+      "description": "- GLARE_LEVEL_0G: GLARE_LEVEL_0G - can be interpreted as \"no glare\"\n - GLARE_LEVEL_1G: GLARE_LEVEL_1G - (and all levels above) can be interpreted as \"glare\"\n - GLARE_LEVEL_2G: GLARE_LEVEL_2G\nGLARE_LEVEL_2G\n - GLARE_LEVEL_3G: GLARE_LEVEL_3G\n - GLARE_LEVEL_4G: GLARE_LEVEL_4G\n - GLARE_LEVEL_5G: GLARE_LEVEL_5G\n - GLARE_LEVEL_6G: GLARE_LEVEL_6G\n - GLARE_LEVEL_7G: GLARE_LEVEL_7G",
+      "title": "Glare Confidence Level Enum, starts with level 0 that can be interpreted as \"no glare\"\nLevel 1 and above can be interpreted as \"glare\". The higher the level it means that is a higher\nconfidence in the model prediction"
+    },
+    "v1ImageChecks": {
+      "type": "object",
+      "properties": {
+        "imageQualityResult": {
+          "title": "Image quality result, checking for blur, glare and hand over document",
+          "allOf": [
+            {
+              "$ref": "#/definitions/v1ImageQualityResult"
+            }
+          ]
+        },
+        "liveness": {
+          "title": "Liveness result",
+          "allOf": [
+            {
+              "$ref": "#/definitions/v1Liveness"
+            }
+          ]
+        },
+        "digitalTempering": {
+          "title": "Check resut for digital tampering",
+          "allOf": [
+            {
+              "$ref": "#/definitions/v1DigitalTemperingCheck"
+            }
+          ]
+        }
+      },
+      "title": "Result of performing checks on input image"
+    },
+    "v1ImageQualityResult": {
+      "type": "object",
+      "properties": {
+        "blurConfidenceLevel": {
+          "title": "blur_confidence_level ranges from 0 to 7",
+          "allOf": [
+            {
+              "$ref": "#/definitions/v1BlurConfidenceLevel"
+            }
+          ]
+        },
+        "glareConfidenceLevel": {
+          "title": "glare_confidence_level ranges from 0 to 7",
+          "allOf": [
+            {
+              "$ref": "#/definitions/v1GlareConfidenceLevel"
+            }
+          ]
+        },
+        "handPercentageOverDocument": {
+          "type": "integer",
+          "format": "int32",
+          "title": "hand_percentage_over_document ranges from 0 to 100"
+        }
+      },
+      "title": "Image Quality Result Message"
+    },
+    "v1Liveness": {
+      "type": "object",
+      "properties": {
+        "photocopy": {
+          "title": "Photocopy confidence level",
+          "allOf": [
+            {
+              "$ref": "#/definitions/v1PhotocopyConfidenceLevel"
+            }
+          ]
+        },
+        "screen": {
+          "title": "Screen confidence level",
+          "allOf": [
+            {
+              "$ref": "#/definitions/v1ScreenConfidenceLevel"
+            }
+          ]
+        }
+      },
+      "title": "Updated Liveness message using confidence levels"
+    },
+    "v1MatchCheck": {
+      "type": "string",
+      "enum": [
+        "MATCH_CHECK_NOT_PERFORMED",
+        "MATCH_CHECK_MATCHED",
+        "MATCH_CHECK_MISSMATCH"
+      ],
+      "default": "MATCH_CHECK_NOT_PERFORMED"
+    },
+    "v1MrzCheck": {
+      "type": "object",
+      "properties": {
+        "notValid": {
+          "type": "boolean",
+          "title": "MRZ if found, decoded but not valid. This indicates serious validity issues with the document"
+        },
+        "missing": {
+          "type": "boolean",
+          "title": "MRZ should be present on the document, but was not found"
+        }
+      },
+      "title": "Checks for MRZ the document"
+    },
+    "v1OneSidedDocument": {
+      "type": "object",
+      "properties": {
+        "checks": {
+          "title": "Checks performed on the image",
+          "allOf": [
+            {
+              "$ref": "#/definitions/v1ImageChecks"
+            }
+          ]
+        }
+      },
+      "title": "Message to be returned if verification was performed on a one sided document"
+    },
+    "v1PhotocopyConfidenceLevel": {
+      "type": "string",
+      "enum": [
+        "PHOTOCOPY_CONFIDENCE_LEVEL_0",
+        "PHOTOCOPY_CONFIDENCE_LEVEL_1",
+        "PHOTOCOPY_CONFIDENCE_LEVEL_2",
+        "PHOTOCOPY_CONFIDENCE_LEVEL_3",
+        "PHOTOCOPY_CONFIDENCE_LEVEL_4",
+        "PHOTOCOPY_CONFIDENCE_LEVEL_5",
+        "PHOTOCOPY_CONFIDENCE_LEVEL_6",
+        "PHOTOCOPY_CONFIDENCE_LEVEL_7"
+      ],
+      "default": "PHOTOCOPY_CONFIDENCE_LEVEL_0",
+      "description": "Photocopy Confidence Level Enum\nPHOTOCOPY_CONFIDENCE_LEVEL_0 Lowest confidence score, Level 0 means there is minimal probability of\nan input image to be a photocopy. Level 7 means there is high probability of an input image to be a photocopy.\nUsing lower levels to detect photocopies will yield higher recall (i.e. you are less likely to \"miss\" a photocopy)\nbut at the cost of lower precision (i.e. you are more likely to detect a non-photocopy as a photocopy).\nIf you are looking for higher precision, use higher levels to detect photocopies. If unsure use level 4 as the \"middle ground\".\n\n - PHOTOCOPY_CONFIDENCE_LEVEL_0: PHOTOCOPY_CONFIDENCE_LEVEL_0\n - PHOTOCOPY_CONFIDENCE_LEVEL_1: PHOTOCOPY_CONFIDENCE_LEVEL_1\n - PHOTOCOPY_CONFIDENCE_LEVEL_2: PHOTOCOPY_CONFIDENCE_LEVEL_2\n - PHOTOCOPY_CONFIDENCE_LEVEL_3: PHOTOCOPY_CONFIDENCE_LEVEL_3\n - PHOTOCOPY_CONFIDENCE_LEVEL_4: PHOTOCOPY_CONFIDENCE_LEVEL_4\n - PHOTOCOPY_CONFIDENCE_LEVEL_5: PHOTOCOPY_CONFIDENCE_LEVEL_5\n - PHOTOCOPY_CONFIDENCE_LEVEL_6: PHOTOCOPY_CONFIDENCE_LEVEL_6\n - PHOTOCOPY_CONFIDENCE_LEVEL_7: PHOTOCOPY_CONFIDENCE_LEVEL_7"
+    },
+    "v1ScreenConfidenceLevel": {
+      "type": "string",
+      "enum": [
+        "SCREEN_CONFIDENCE_LEVEL_0",
+        "SCREEN_CONFIDENCE_LEVEL_1",
+        "SCREEN_CONFIDENCE_LEVEL_2",
+        "SCREEN_CONFIDENCE_LEVEL_3",
+        "SCREEN_CONFIDENCE_LEVEL_4",
+        "SCREEN_CONFIDENCE_LEVEL_5",
+        "SCREEN_CONFIDENCE_LEVEL_6",
+        "SCREEN_CONFIDENCE_LEVEL_7"
+      ],
+      "default": "SCREEN_CONFIDENCE_LEVEL_0",
+      "description": "Screen Confidence Level Enum\nSCREEN_CONFIDENCE_LEVEL_0 Lowest confidence score, Level 0 means there is minimal probability of\nan input image to be a screen. Level 7 means there is high probability of an input image to be a screen.\nUsing lower levels to detect screens will yield higher recall (i.e. you are less likely to \"miss\" a screen)\nbut at the cost of lower precision (i.e. you are more likely to detect a non-screen as a screen).\nIf you are looking for higher precision, use higher levels to detect screens. If unsure use level 4 as the \"middle ground\".\n\n - SCREEN_CONFIDENCE_LEVEL_0: SCREEN_CONFIDENCE_LEVEL_0\n - SCREEN_CONFIDENCE_LEVEL_1: SCREEN_CONFIDENCE_LEVEL_1\n - SCREEN_CONFIDENCE_LEVEL_2: SCREEN_CONFIDENCE_LEVEL_2\n - SCREEN_CONFIDENCE_LEVEL_3: SCREEN_CONFIDENCE_LEVEL_3\n - SCREEN_CONFIDENCE_LEVEL_4: SCREEN_CONFIDENCE_LEVEL_4\n - SCREEN_CONFIDENCE_LEVEL_5: SCREEN_CONFIDENCE_LEVEL_5\n - SCREEN_CONFIDENCE_LEVEL_6: SCREEN_CONFIDENCE_LEVEL_6\n - SCREEN_CONFIDENCE_LEVEL_7: SCREEN_CONFIDENCE_LEVEL_7"
+    },
+    "v1TextFieldCheck": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "title": "The type of the text field",
+          "allOf": [
+            {
+              "$ref": "#/definitions/v1TextFieldType"
+            }
+          ]
+        },
+        "checks": {
+          "title": "The checks for the text field",
+          "allOf": [
+            {
+              "$ref": "#/definitions/v1Checks"
+            }
+          ]
+        }
+      }
+    },
+    "v1TextFieldType": {
+      "type": "string",
+      "enum": [
+        "TYPE_FIRST_NAME",
+        "TYPE_LAST_NAME",
+        "TYPE_NATIONALITY",
+        "TYPE_DOCUMENT_IDENTITY_NUMBER",
+        "TYPE_ISSUING_AUTHORITY",
+        "TYPE_ADDRESS",
+        "TYPE_PERSONAL_IDENTITY_NUMBER",
+        "TYPE_MARITAL_STATUS",
+        "TYPE_EXTENDED_ADDRESS",
+        "TYPE_EXTENDED_ADDRESS_SPECIFICS",
+        "TYPE_CLASS",
+        "TYPE_CONDITIONS",
+        "TYPE_ENDORSEMENTS",
+        "TYPE_DRIVERS_LICENSE_TYPE",
+        "TYPE_FULL_NAME",
+        "TYPE_PLACE_OF_BIRTH",
+        "TYPE_PROFESSION",
+        "TYPE_EMPLOYER",
+        "TYPE_EXTENDED_NAME",
+        "TYPE_FATHERS_NAME",
+        "TYPE_MOTHERS_NAME",
+        "TYPE_RACE",
+        "TYPE_RESIDENTIAL_TYPE",
+        "TYPE_RESTRICTIONS",
+        "TYPE_BLOOD_TYPE",
+        "TYPE_NUMBER"
+      ],
+      "default": "TYPE_FIRST_NAME",
+      "description": "Type - an enum specifying field type. Eg. \"First name\", \"Last name\", \"Address\", etc.\n\n - TYPE_FIRST_NAME: Represents the first name of an individual\n - TYPE_LAST_NAME: Represents the last name of an individual\n - TYPE_NATIONALITY: Represents the nationality of an individual\n - TYPE_DOCUMENT_IDENTITY_NUMBER: Represents the unique number assigned to a document\n - TYPE_ISSUING_AUTHORITY: Represents the authority that issued a document\n - TYPE_ADDRESS: Represents the address of an individual\n - TYPE_PERSONAL_IDENTITY_NUMBER: Represents a unique personal identification number, such as OIB\n - TYPE_MARITAL_STATUS: Represents the marital status of an individual\n - TYPE_EXTENDED_ADDRESS: Represents additional information about an address\n - TYPE_EXTENDED_ADDRESS_SPECIFICS: Represents additional information about an address (second part)\n - TYPE_CLASS: Represents a classification or category\n - TYPE_CONDITIONS: Represents conditions or restrictions\n - TYPE_ENDORSEMENTS: Represents endorsements or special permissions\n - TYPE_DRIVERS_LICENSE_TYPE: Represents the type of licence or permit\n - TYPE_FULL_NAME: Represents the full name of an individual\n - TYPE_PLACE_OF_BIRTH: Represents the place of birth of an individual\n - TYPE_PROFESSION: Represents the profession or occupation of an individual\n - TYPE_EMPLOYER: Represents the employer of an individual\n - TYPE_EXTENDED_NAME: Represents additional information about a name\n - TYPE_FATHERS_NAME: Represents the father's name of an individual\n - TYPE_MOTHERS_NAME: Represents the mother's name of an individual\n - TYPE_RACE: Represents the race or ethnicity of an individual\n - TYPE_RESIDENTIAL_TYPE: Represents the residential status of an individual\n - TYPE_RESTRICTIONS: Represents restrictions or limitations\n - TYPE_BLOOD_TYPE: Represents the blood type of an individual\n - TYPE_NUMBER: Represents an additional numbers/codes that can appear on some documents"
+    },
+    "v1TwoSidedDocument": {
+      "type": "object",
+      "properties": {
+        "front": {
+          "title": "Checks performed on the image containing the front side of the document",
+          "allOf": [
+            {
+              "$ref": "#/definitions/v1ImageChecks"
+            }
+          ]
+        },
+        "back": {
+          "title": "Checks performed on the image containing the back side of the document",
+          "allOf": [
+            {
+              "$ref": "#/definitions/v1ImageChecks"
+            }
+          ]
+        }
+      },
+      "title": "Message to be returned if verification was performed on a two sided document"
+    },
+    "v1VerificationRequest": {
+      "type": "object",
+      "properties": {
+        "firstImage": {
+          "type": "string",
+          "format": "byte",
+          "title": "First image - required"
+        },
+        "secondImage": {
+          "type": "string",
+          "format": "byte",
+          "title": "Second image - optional, if performing a check of a one sided document this field is not required"
+        }
+      },
+      "title": "Verification request"
+    },
+    "v1VerificationResult": {
+      "type": "object",
+      "properties": {
+        "oneSided": {
+          "$ref": "#/definitions/v1OneSidedDocument"
+        },
+        "twoSided": {
+          "$ref": "#/definitions/v1TwoSidedDocument"
+        },
+        "dataCheck": {
+          "title": "Data check result",
+          "allOf": [
+            {
+              "$ref": "#/definitions/v1DataCheck"
+            }
+          ]
+        }
+      },
+      "title": "Verification result"
+    },
+    "v1VisualFieldCheck": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "title": "The type of the visual field",
+          "allOf": [
+            {
+              "$ref": "#/definitions/v1VisualFieldType"
+            }
+          ]
+        },
+        "checks": {
+          "title": "The checks for the visual field",
+          "allOf": [
+            {
+              "$ref": "#/definitions/v1Checks"
+            }
+          ]
+        }
+      }
+    },
+    "v1VisualFieldType": {
+      "type": "string",
+      "enum": [
+        "TYPE_FACE_PHOTO",
+        "TYPE_SIGNATURE"
+      ],
+      "default": "TYPE_FACE_PHOTO",
+      "description": "Type - an enum specifying field types that are visual fields.\neg. \"Face photo\", \"Signature\", etc.\n\n - TYPE_FACE_PHOTO: Face photo\n - TYPE_SIGNATURE: Signature"
+    }
+  }
+}
