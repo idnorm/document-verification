@@ -30,7 +30,7 @@
           "default": {
             "description": "An unexpected error response.",
             "schema": {
-              "$ref": "#/definitions/rpcStatus"
+              "$ref": "#/definitions/googlerpcStatus"
             }
           }
         },
@@ -58,18 +58,11 @@
         "LIKELY",
         "CONFIRMED"
       ],
-      "default": "NOT_DETECTED"
+      "default": "NOT_DETECTED",
+      "description": "- NOT_DETECTED: Digital tampering not detected\n - LIKELY: There are evidences of digital tampering\n - CONFIRMED: There are strong evidences of digital tampering",
+      "title": "Digital tampering level indicates how confident we are that the image\nhas been tampered using some kind of software"
     },
-    "protobufAny": {
-      "type": "object",
-      "properties": {
-        "@type": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": {}
-    },
-    "rpcStatus": {
+    "googlerpcStatus": {
       "type": "object",
       "properties": {
         "code": {
@@ -87,6 +80,15 @@
           }
         }
       }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
     },
     "v1BarcodeCheck": {
       "type": "object",
@@ -241,9 +243,15 @@
       "type": "object",
       "properties": {
         "level": {
-          "$ref": "#/definitions/DigitalTemperingCheckLevel"
+          "title": "Digital tampering level",
+          "allOf": [
+            {
+              "$ref": "#/definitions/DigitalTemperingCheckLevel"
+            }
+          ]
         }
-      }
+      },
+      "title": "Result of performing checks for digital tampering"
     },
     "v1FieldChecks": {
       "type": "object",
@@ -548,6 +556,14 @@
     "v1VerificationResult": {
       "type": "object",
       "properties": {
+        "status": {
+          "title": "Status of the verification",
+          "allOf": [
+            {
+              "$ref": "#/definitions/v1VerificationResultStatus"
+            }
+          ]
+        },
         "oneSided": {
           "$ref": "#/definitions/v1OneSidedDocument"
         },
@@ -564,6 +580,18 @@
         }
       },
       "title": "Verification result"
+    },
+    "v1VerificationResultStatus": {
+      "type": "string",
+      "enum": [
+        "STATUS_OK",
+        "STATUS_DOCUMENT_NOT_FOUND",
+        "STATUS_DOCUMENT_CLASS_NOT_SUPPORTED",
+        "STATUS_MISSING_BACK_SIDE",
+        "STATUS_MISSING_FRONT_SIDE"
+      ],
+      "default": "STATUS_OK",
+      "title": "- STATUS_OK: Both front and back side of the document were found\n - STATUS_DOCUMENT_NOT_FOUND: Failed to recognize the document in the given images\n - STATUS_DOCUMENT_CLASS_NOT_SUPPORTED: Didn't perform the verification as this document class is not supported\n - STATUS_MISSING_BACK_SIDE: Found front side of the document but missing back side\n - STATUS_MISSING_FRONT_SIDE: Found back side of the document but missing front side"
     },
     "v1VisualFieldCheck": {
       "type": "object",
