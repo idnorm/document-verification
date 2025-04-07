@@ -43,7 +43,7 @@ Buf also provides us with his [protobuf schema registry](https://buf.build/explo
 On the bufs schema registry, we publish our service definitions.
 
 ### ID extraction service schema
-**The latest version** of our service schema can be found [here](https://buf.build/idnorm/ddx/docs/main:proto.ddx.v1).
+**The latest version** of our service schema can be found [here](https://buf.build/idnorm/dv/docs/main:proto.dv.v1).
 
 There you can see detailed documentation on the available methods service defines, as well as input and output messages.
 There you can find all information about input data requirements, what is the expected result the service will return, as well as
