@@ -9,12 +9,8 @@
       "name": "VerificationService"
     }
   ],
-  "consumes": [
-    "application/json"
-  ],
-  "produces": [
-    "application/json"
-  ],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
   "paths": {
     "/api/v1/verify": {
       "post": {
@@ -44,20 +40,14 @@
             }
           }
         ],
-        "tags": [
-          "VerificationService"
-        ]
+        "tags": ["VerificationService"]
       }
     }
   },
   "definitions": {
     "DigitalTemperingCheckLevel": {
       "type": "string",
-      "enum": [
-        "NOT_DETECTED",
-        "LIKELY",
-        "CONFIRMED"
-      ],
+      "enum": ["NOT_DETECTED", "LIKELY", "CONFIRMED"],
       "default": "NOT_DETECTED",
       "description": "- NOT_DETECTED: Digital tampering not detected\n - LIKELY: There are evidences of digital tampering\n - CONFIRMED: There are strong evidences of digital tampering",
       "title": "Digital tampering level indicates how confident we are that the image\nhas been tampered using some kind of software"
@@ -143,7 +133,7 @@
     "v1BlurConfidenceLevel": {
       "type": "string",
       "enum": [
-        "BLUR_LEVEL_0C",
+        "BLUR_LEVEL_NO_BLUR",
         "BLUR_LEVEL_1C",
         "BLUR_LEVEL_2C",
         "BLUR_LEVEL_3C",
@@ -152,9 +142,9 @@
         "BLUR_LEVEL_6C",
         "BLUR_LEVEL_7C"
       ],
-      "default": "BLUR_LEVEL_0C",
-      "description": "- BLUR_LEVEL_0C: BLUR_LEVEL_0C - can be interpreted as \"no blur\"\n - BLUR_LEVEL_1C: BLUR_LEVEL_1C - (and all levels above) can be interpreted as \"blur\"\n - BLUR_LEVEL_2C: BLUR_LEVEL_2C\n - BLUR_LEVEL_3C: BLUR_LEVEL_3C\n - BLUR_LEVEL_4C: BLUR_LEVEL_4C\n - BLUR_LEVEL_5C: BLUR_LEVEL_5C\n - BLUR_LEVEL_6C: BLUR_LEVEL_6C\n - BLUR_LEVEL_7C: BLUR_LEVEL_7C",
-      "title": "Blur Confidence Level Enum, starts with level 0 that can be interpreted as \"no blur\"\nLevel 1 and above can be interpreted as \"blur\". The higher the level it means that is a higher\nconfidence in the model prediction"
+      "default": "BLUR_LEVEL_NO_BLUR",
+      "description": "- BLUR_LEVEL_NO_BLUR: BLUR_LEVEL_NO_BLUR - model is confident that there is minimal or no blur in the document image\n - BLUR_LEVEL_1C: BLUR_LEVEL_1C - (and all levels above) can be interpreted as \"blur\"\n - BLUR_LEVEL_2C: BLUR_LEVEL_2C\n - BLUR_LEVEL_3C: BLUR_LEVEL_3C\n - BLUR_LEVEL_4C: BLUR_LEVEL_4C\n - BLUR_LEVEL_5C: BLUR_LEVEL_5C\n - BLUR_LEVEL_6C: BLUR_LEVEL_6C\n - BLUR_LEVEL_7C: BLUR_LEVEL_7C",
+      "title": "Blur Confidence Level Enum"
     },
     "v1Checks": {
       "type": "object",
@@ -333,12 +323,14 @@
         "FORMAT_CHECK_INVALID",
         "FORMAT_CHECK_VALID"
       ],
-      "default": "FORMAT_CHECK_NOT_PERFORMED"
+      "default": "FORMAT_CHECK_NOT_PERFORMED",
+      "description": "- FORMAT_CHECK_NOT_PERFORMED: FORMAT_CHECK_NOT_PERFORMED means that the format check was not performed\n - FORMAT_CHECK_INVALID: FORMAT_CHECK_INVALID format check was performed and was invalid\n - FORMAT_CHECK_VALID: FORMAT_CHECK_VALID format check was performed and was valid",
+      "title": "FormatCheck enum"
     },
     "v1GlareConfidenceLevel": {
       "type": "string",
       "enum": [
-        "GLARE_LEVEL_0G",
+        "GLARE_LEVEL_NO_GLARE",
         "GLARE_LEVEL_1G",
         "GLARE_LEVEL_2G",
         "GLARE_LEVEL_3G",
@@ -347,9 +339,9 @@
         "GLARE_LEVEL_6G",
         "GLARE_LEVEL_7G"
       ],
-      "default": "GLARE_LEVEL_0G",
-      "description": "- GLARE_LEVEL_0G: GLARE_LEVEL_0G - can be interpreted as \"no glare\"\n - GLARE_LEVEL_1G: GLARE_LEVEL_1G - (and all levels above) can be interpreted as \"glare\"\n - GLARE_LEVEL_2G: GLARE_LEVEL_2G\nGLARE_LEVEL_2G\n - GLARE_LEVEL_3G: GLARE_LEVEL_3G\n - GLARE_LEVEL_4G: GLARE_LEVEL_4G\n - GLARE_LEVEL_5G: GLARE_LEVEL_5G\n - GLARE_LEVEL_6G: GLARE_LEVEL_6G\n - GLARE_LEVEL_7G: GLARE_LEVEL_7G",
-      "title": "Glare Confidence Level Enum, starts with level 0 that can be interpreted as \"no glare\"\nLevel 1 and above can be interpreted as \"glare\". The higher the level it means that is a higher\nconfidence in the model prediction"
+      "default": "GLARE_LEVEL_NO_GLARE",
+      "description": "- GLARE_LEVEL_NO_GLARE: GLARE_LEVEL_NO_GLARE - model is confident that there is minimal or no blur in the document image\n - GLARE_LEVEL_1G: GLARE_LEVEL_1G - (and all levels above) can be interpreted as \"glare\"\n - GLARE_LEVEL_2G: GLARE_LEVEL_2G\n - GLARE_LEVEL_3G: GLARE_LEVEL_3G\n - GLARE_LEVEL_4G: GLARE_LEVEL_4G\n - GLARE_LEVEL_5G: GLARE_LEVEL_5G\n - GLARE_LEVEL_6G: GLARE_LEVEL_6G\n - GLARE_LEVEL_7G: GLARE_LEVEL_7G",
+      "title": "Glare Confidence Level Enum"
     },
     "v1ImageChecks": {
       "type": "object",
@@ -385,7 +377,7 @@
       "type": "object",
       "properties": {
         "blurConfidenceLevel": {
-          "title": "blur_confidence_level ranges from 0 to 7",
+          "title": "Blur Confidence Level, starts with level 0 that can be interpreted as \"no blur\"\nLevel 1 and above can be interpreted as \"blur\". The higher the level it means that is a higher\nconfidence in the model prediction",
           "allOf": [
             {
               "$ref": "#/definitions/v1BlurConfidenceLevel"
@@ -393,7 +385,7 @@
           ]
         },
         "glareConfidenceLevel": {
-          "title": "glare_confidence_level ranges from 0 to 7",
+          "title": "Glare Confidence Level, starts with level 0 that can be interpreted as \"no glare\"\nLevel 1 and above can be interpreted as \"glare\". The higher the level it means that is a higher\nconfidence in the model prediction",
           "allOf": [
             {
               "$ref": "#/definitions/v1GlareConfidenceLevel"
@@ -412,7 +404,7 @@
       "type": "object",
       "properties": {
         "photocopy": {
-          "title": "Photocopy confidence level",
+          "description": "PHOTOCOPY_CONFIDENCE_NOT_PHOTOCOPY means that the input image is likely not a photocopy.\nLevel 1 and higher can be interpreted as \"photocopy\", the higher the level the higher the confidence in the model\nprediction.\nUsing lower levels to detect photocopies will yield higher recall (i.e. you are less likely to \"miss\" a photocopy)\nbut at the cost of lower precision (i.e. you are more likely to detect a non-photocopy as a photocopy).\nIf you are looking for higher precision, use higher levels to detect photocopies.",
           "allOf": [
             {
               "$ref": "#/definitions/v1PhotocopyConfidenceLevel"
@@ -420,7 +412,7 @@
           ]
         },
         "screen": {
-          "title": "Screen confidence level",
+          "description": "SCREEN_CONFIDENCE_NOT_SCREEN means that the input image is likely not a screen\nLevel 1 and higher can be interpreted as \"screen\", the higher the level the higher the confidence in the model\nprediction\nUsing lower levels to detect screens will yield higher recall (i.e. you are less likely to \"miss\" a screen)\nbut at the cost of lower precision (i.e. you are more likely to detect a non-screen as a screen).\nIf you are looking for higher precision, use higher levels to detect screens.",
           "allOf": [
             {
               "$ref": "#/definitions/v1ScreenConfidenceLevel"
@@ -437,7 +429,9 @@
         "MATCH_CHECK_MATCHED",
         "MATCH_CHECK_MISSMATCH"
       ],
-      "default": "MATCH_CHECK_NOT_PERFORMED"
+      "default": "MATCH_CHECK_NOT_PERFORMED",
+      "description": "- MATCH_CHECK_NOT_PERFORMED: MATCH_CHECK_NOT_PERFORMED means that the match check was not performed\n - MATCH_CHECK_MATCHED: MATCH_CHECK_MATCHED data check was performed and matched\n - MATCH_CHECK_MISSMATCH: MATCH_CHECK_MISSMATCH data check was performed and did not match",
+      "title": "MatchCheck enum"
     },
     "v1MrzCheck": {
       "type": "object",
@@ -456,7 +450,7 @@
     "v1PhotocopyConfidenceLevel": {
       "type": "string",
       "enum": [
-        "PHOTOCOPY_CONFIDENCE_LEVEL_0",
+        "PHOTOCOPY_CONFIDENCE_NOT_PHOTOCOPY",
         "PHOTOCOPY_CONFIDENCE_LEVEL_1",
         "PHOTOCOPY_CONFIDENCE_LEVEL_2",
         "PHOTOCOPY_CONFIDENCE_LEVEL_3",
@@ -465,13 +459,13 @@
         "PHOTOCOPY_CONFIDENCE_LEVEL_6",
         "PHOTOCOPY_CONFIDENCE_LEVEL_7"
       ],
-      "default": "PHOTOCOPY_CONFIDENCE_LEVEL_0",
-      "description": "Photocopy Confidence Level Enum\nPHOTOCOPY_CONFIDENCE_LEVEL_0 Lowest confidence score, Level 0 means there is minimal probability of\nan input image to be a photocopy. Level 7 means there is high probability of an input image to be a photocopy.\nUsing lower levels to detect photocopies will yield higher recall (i.e. you are less likely to \"miss\" a photocopy)\nbut at the cost of lower precision (i.e. you are more likely to detect a non-photocopy as a photocopy).\nIf you are looking for higher precision, use higher levels to detect photocopies. If unsure use level 4 as the \"middle ground\".\n\n - PHOTOCOPY_CONFIDENCE_LEVEL_0: PHOTOCOPY_CONFIDENCE_LEVEL_0\n - PHOTOCOPY_CONFIDENCE_LEVEL_1: PHOTOCOPY_CONFIDENCE_LEVEL_1\n - PHOTOCOPY_CONFIDENCE_LEVEL_2: PHOTOCOPY_CONFIDENCE_LEVEL_2\n - PHOTOCOPY_CONFIDENCE_LEVEL_3: PHOTOCOPY_CONFIDENCE_LEVEL_3\n - PHOTOCOPY_CONFIDENCE_LEVEL_4: PHOTOCOPY_CONFIDENCE_LEVEL_4\n - PHOTOCOPY_CONFIDENCE_LEVEL_5: PHOTOCOPY_CONFIDENCE_LEVEL_5\n - PHOTOCOPY_CONFIDENCE_LEVEL_6: PHOTOCOPY_CONFIDENCE_LEVEL_6\n - PHOTOCOPY_CONFIDENCE_LEVEL_7: PHOTOCOPY_CONFIDENCE_LEVEL_7"
+      "default": "PHOTOCOPY_CONFIDENCE_NOT_PHOTOCOPY",
+      "description": "Photocopy Confidence Level Enum\nPHOTOCOPY_CONFIDENCE_NOT_PHOTOCOPY means that the input image is likely not a photocopy.\nLevel 1 and higher can be interpreted as \"photocopy\", the higher the level the higher the confidence in the model\nprediction.\nUsing lower levels to detect photocopies will yield higher recall (i.e. you are less likely to \"miss\" a photocopy)\nbut at the cost of lower precision (i.e. you are more likely to detect a non-photocopy as a photocopy).\nIf you are looking for higher precision, use higher levels to detect photocopies.\n\n - PHOTOCOPY_CONFIDENCE_NOT_PHOTOCOPY: PHOTOCOPY_CONFIDENCE_LEVEL_0\n - PHOTOCOPY_CONFIDENCE_LEVEL_1: PHOTOCOPY_CONFIDENCE_LEVEL_1\n - PHOTOCOPY_CONFIDENCE_LEVEL_2: PHOTOCOPY_CONFIDENCE_LEVEL_2\n - PHOTOCOPY_CONFIDENCE_LEVEL_3: PHOTOCOPY_CONFIDENCE_LEVEL_3\n - PHOTOCOPY_CONFIDENCE_LEVEL_4: PHOTOCOPY_CONFIDENCE_LEVEL_4\n - PHOTOCOPY_CONFIDENCE_LEVEL_5: PHOTOCOPY_CONFIDENCE_LEVEL_5\n - PHOTOCOPY_CONFIDENCE_LEVEL_6: PHOTOCOPY_CONFIDENCE_LEVEL_6\n - PHOTOCOPY_CONFIDENCE_LEVEL_7: PHOTOCOPY_CONFIDENCE_LEVEL_7"
     },
     "v1ScreenConfidenceLevel": {
       "type": "string",
       "enum": [
-        "SCREEN_CONFIDENCE_LEVEL_0",
+        "SCREEN_CONFIDENCE_NOT_SCREEN",
         "SCREEN_CONFIDENCE_LEVEL_1",
         "SCREEN_CONFIDENCE_LEVEL_2",
         "SCREEN_CONFIDENCE_LEVEL_3",
@@ -480,8 +474,8 @@
         "SCREEN_CONFIDENCE_LEVEL_6",
         "SCREEN_CONFIDENCE_LEVEL_7"
       ],
-      "default": "SCREEN_CONFIDENCE_LEVEL_0",
-      "description": "Screen Confidence Level Enum\nSCREEN_CONFIDENCE_LEVEL_0 Lowest confidence score, Level 0 means there is minimal probability of\nan input image to be a screen. Level 7 means there is high probability of an input image to be a screen.\nUsing lower levels to detect screens will yield higher recall (i.e. you are less likely to \"miss\" a screen)\nbut at the cost of lower precision (i.e. you are more likely to detect a non-screen as a screen).\nIf you are looking for higher precision, use higher levels to detect screens. If unsure use level 4 as the \"middle ground\".\n\n - SCREEN_CONFIDENCE_LEVEL_0: SCREEN_CONFIDENCE_LEVEL_0\n - SCREEN_CONFIDENCE_LEVEL_1: SCREEN_CONFIDENCE_LEVEL_1\n - SCREEN_CONFIDENCE_LEVEL_2: SCREEN_CONFIDENCE_LEVEL_2\n - SCREEN_CONFIDENCE_LEVEL_3: SCREEN_CONFIDENCE_LEVEL_3\n - SCREEN_CONFIDENCE_LEVEL_4: SCREEN_CONFIDENCE_LEVEL_4\n - SCREEN_CONFIDENCE_LEVEL_5: SCREEN_CONFIDENCE_LEVEL_5\n - SCREEN_CONFIDENCE_LEVEL_6: SCREEN_CONFIDENCE_LEVEL_6\n - SCREEN_CONFIDENCE_LEVEL_7: SCREEN_CONFIDENCE_LEVEL_7"
+      "default": "SCREEN_CONFIDENCE_NOT_SCREEN",
+      "description": "Screen Confidence Level Enum\nSCREEN_CONFIDENCE_NOT_SCREEN means that the input image is likely not a screen\nLevel 1 and higher can be interpreted as \"screen\", the higher the level the higher the confidence in the model\nprediction.\nUsing lower levels to detect screens will yield higher recall (i.e. you are less likely to \"miss\" a screen)\nbut at the cost of lower precision (i.e. you are more likely to detect a non-screen as a screen).\nIf you are looking for higher precision, use higher levels to detect screens.\n\n - SCREEN_CONFIDENCE_NOT_SCREEN: SCREEN_CONFIDENCE_NOT_SCREEN\n - SCREEN_CONFIDENCE_LEVEL_1: SCREEN_CONFIDENCE_LEVEL_1\n - SCREEN_CONFIDENCE_LEVEL_2: SCREEN_CONFIDENCE_LEVEL_2\n - SCREEN_CONFIDENCE_LEVEL_3: SCREEN_CONFIDENCE_LEVEL_3\n - SCREEN_CONFIDENCE_LEVEL_4: SCREEN_CONFIDENCE_LEVEL_4\n - SCREEN_CONFIDENCE_LEVEL_5: SCREEN_CONFIDENCE_LEVEL_5\n - SCREEN_CONFIDENCE_LEVEL_6: SCREEN_CONFIDENCE_LEVEL_6\n - SCREEN_CONFIDENCE_LEVEL_7: SCREEN_CONFIDENCE_LEVEL_7"
     },
     "v1TextFieldCheck": {
       "type": "object",
@@ -646,10 +640,7 @@
     },
     "v1VisualFieldType": {
       "type": "string",
-      "enum": [
-        "TYPE_FACE_PHOTO",
-        "TYPE_SIGNATURE"
-      ],
+      "enum": ["TYPE_FACE_PHOTO", "TYPE_SIGNATURE"],
       "default": "TYPE_FACE_PHOTO",
       "description": "Type - an enum specifying field types that are visual fields.\neg. \"Face photo\", \"Signature\", etc.\n\n - TYPE_FACE_PHOTO: Face photo\n - TYPE_SIGNATURE: Signature"
     }
