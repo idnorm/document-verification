@@ -9,8 +9,12 @@
       "name": "VerificationService"
     }
   ],
-  "consumes": ["application/json"],
-  "produces": ["application/json"],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
   "paths": {
     "/api/v1/verify": {
       "post": {
@@ -40,53 +44,23 @@
             }
           }
         ],
-        "tags": ["VerificationService"]
+        "tags": [
+          "VerificationService"
+        ]
       }
     }
   },
   "definitions": {
     "DigitalTemperingCheckLevel": {
       "type": "string",
-      "enum": ["NOT_DETECTED", "LIKELY", "CONFIRMED"],
+      "enum": [
+        "NOT_DETECTED",
+        "LIKELY",
+        "CONFIRMED"
+      ],
       "default": "NOT_DETECTED",
       "description": "- NOT_DETECTED: Digital tampering not detected\n - LIKELY: There are evidences of digital tampering\n - CONFIRMED: There are strong evidences of digital tampering",
       "title": "Digital tampering level indicates how confident we are that the image\nhas been tampered using some kind of software"
-    },
-    "VerificationSessionRequestCommand": {
-      "type": "string",
-      "enum": [
-        "TYPE_DEFAULT",
-        "TYPE_RESCAN_FRONT",
-        "TYPE_RESCAN_BACK",
-        "TYPE_FINISH"
-      ],
-      "default": "TYPE_DEFAULT"
-    },
-    "VerificationSessionResponseLatestMessageResponse": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "$ref": "#/definitions/VerificationSessionResponseLatestMessageResponseStatus"
-        },
-        "checks": {
-          "$ref": "#/definitions/v1ImageChecks"
-        }
-      }
-    },
-    "VerificationSessionResponseLatestMessageResponseStatus": {
-      "type": "string",
-      "enum": [
-        "STATUS_SCANNED_FRONT",
-        "STATUS_SCANNED_BACK",
-        "STATUS_SCANNING_FINISHED",
-        "STATUS_DOCUMENT_NOT_FOUND",
-        "STATUS_DOCUMENT_CLASS_NOT_SUPPORTED",
-        "STATUS_MULTIPLE_BACK_SIDE_SCANNED",
-        "STATUS_MULTIPLE_FRONT_SIDE_SCANNED",
-        "STATUS_SCANNED_MULTIPLE_DOCUMENT_CLASSES"
-      ],
-      "default": "STATUS_SCANNED_FRONT",
-      "title": "- STATUS_SCANNED_FRONT: Latest image was successfully scanned as document front\n - STATUS_SCANNED_BACK: Latest image was successfully scanned as document back\n - STATUS_SCANNING_FINISHED: Latest image was successfully scanned, either one sided document was scanned\nor both sides of two sided document were scanned\n - STATUS_DOCUMENT_NOT_FOUND: Could not detect the document on the latest image\n - STATUS_DOCUMENT_CLASS_NOT_SUPPORTED: Latest image contains the document but we do not support this document class\n - STATUS_MULTIPLE_BACK_SIDE_SCANNED: The latest image contained document back side that was already scanned during this session\n - STATUS_MULTIPLE_FRONT_SIDE_SCANNED: The latest image contained document front side that was already scanned during this session\n - STATUS_SCANNED_MULTIPLE_DOCUMENT_CLASSES: The latest image contained a document class that is different from the one scanned previously"
     },
     "googlerpcStatus": {
       "type": "object",
@@ -551,7 +525,7 @@
       "type": "object",
       "properties": {
         "status": {
-          "title": "Status of the verification",
+          "description": "Status of the verification, we expect to have one or two images in the input request, and these images\nare expected to be front and back sides of the SAME document. If it is a \"one sided document\" (e.g. most passports)\nthen only one image is expected in the input request. If it is a \"two sided document\" (e.g. most ID cards)\nthen two images are expected in the input request. If verification process was successfully performed\nthe status will be STATUS_OK. For the case of two sided document status will be STATUS_OK if we successfully\nrecognized both sides of the document. If back side is not recognized STATUS_MISSING_BACK_SIDE is returned, if\nfront side is not recognized STATUS_MISSING_FRONT_SIDE is returned. In the case of the \"one sided document\" the\nstatus will be STATUS_OK if we successfully recognized the document and STATUS_DOCUMENT_RECOGNITION_FAILED\notherwise.",
           "allOf": [
             {
               "$ref": "#/definitions/v1VerificationResultStatus"
@@ -589,33 +563,13 @@
       "type": "string",
       "enum": [
         "STATUS_OK",
-        "STATUS_DOCUMENT_NOT_FOUND",
+        "STATUS_DOCUMENT_RECOGNITION_FAILED",
         "STATUS_MISSING_BACK_SIDE",
         "STATUS_MISSING_FRONT_SIDE"
       ],
       "default": "STATUS_OK",
-      "title": "- STATUS_OK: Verification performed successfully\n - STATUS_DOCUMENT_NOT_FOUND: Failed to recognize the document in the given images\n - STATUS_MISSING_BACK_SIDE: Found front side of the document but missing back side\n - STATUS_MISSING_FRONT_SIDE: Found back side of the document but missing front side"
-    },
-    "v1VerificationSessionResponse": {
-      "type": "object",
-      "properties": {
-        "latestChunk": {
-          "title": "For each new message send on the client stream the server will return\n\"latest_image\" message",
-          "allOf": [
-            {
-              "$ref": "#/definitions/VerificationSessionResponseLatestMessageResponse"
-            }
-          ]
-        },
-        "final": {
-          "title": "Sent as the last message as a response to the client message that requested to \"finish\" the session",
-          "allOf": [
-            {
-              "$ref": "#/definitions/v1VerificationResult"
-            }
-          ]
-        }
-      }
+      "description": "- STATUS_OK: Verification performed successfully\n - STATUS_DOCUMENT_RECOGNITION_FAILED: Failed to recognize the document in the given images\n - STATUS_MISSING_BACK_SIDE: Found front side of the document but missing back side\n - STATUS_MISSING_FRONT_SIDE: Found back side of the document but missing front side",
+      "title": "Status enum"
     },
     "v1VisualFieldCheck": {
       "type": "object",
@@ -640,7 +594,10 @@
     },
     "v1VisualFieldType": {
       "type": "string",
-      "enum": ["TYPE_FACE_PHOTO", "TYPE_SIGNATURE"],
+      "enum": [
+        "TYPE_FACE_PHOTO",
+        "TYPE_SIGNATURE"
+      ],
       "default": "TYPE_FACE_PHOTO",
       "description": "Type - an enum specifying field types that are visual fields.\neg. \"Face photo\", \"Signature\", etc.\n\n - TYPE_FACE_PHOTO: Face photo\n - TYPE_SIGNATURE: Signature"
     }
