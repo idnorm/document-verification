@@ -54,12 +54,12 @@ services:
     command:
       - "--model_config_file=/config/model-config"
       # setting this to expected number of max concurrent requests
-      - "--tensorflow_inter_op_parallelism=20"
+      - "--tensorflow_inter_op_parallelism=${SERVING_INTER_PARA}"
       # number of CPUs seems to be a good value
-      - "--tensorflow_intra_op_parallelism=8"
+      - "--tensorflow_intra_op_parallelism=${SERVING_NUM_CPU}"
       # setting this to expected number of max concurrent requests x 2 to
       # adjust for "waiting" for resources to become available
-      - "--grpc_max_threads=200"
+      - "--grpc_max_threads=${SERVING_MAX_CONCURRENT_REQ}"
     ports:
       - "8500:8500" # Expose port 8500 (default port for TensorFlow Serving gRPC)
     volumes:
@@ -68,8 +68,8 @@ services:
     deploy:
       resources:
         limits:
-          memory: 3G
-          cpus: 8.0
+          memory: "${SERVING_MEM_LIMIT}"
+          cpus: "${SERVING_NUM_CPU}"
 
   docver:
     image: us-central1-docker.pkg.dev/idnorm/idnorm-pub/dv:${DV_VERSION}

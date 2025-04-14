@@ -4,7 +4,7 @@ This repository holds documentation and resources to help developers
 get started with our identity document verification service.
 
 This service allows you to analyse identity documents images
-and check the validity and authenticity of the presentad identity document.
+and check the validity and authenticity of the presented identity document.
 
 ## Cloud SaaS
 
@@ -42,7 +42,7 @@ Buf also provides us with his [protobuf schema registry](https://buf.build/explo
 
 On the bufs schema registry, we publish our service definitions.
 
-### ID extraction service schema
+### Document verification service schema
 **The latest version** of our service schema can be found [here](https://buf.build/idnorm/dv/docs/main:proto.dv.v1).
 
 There you can see detailed documentation on the available methods service defines, as well as input and output messages.
