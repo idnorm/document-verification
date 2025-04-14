@@ -37,12 +37,12 @@ fi
 
 # Send the request using curl
 if [ -n "$IDNORM_LICENSE_KEY" ]; then
-  curl -X POST "$ENDPOINT/api/v1/scan" \
+  curl -X POST "$ENDPOINT/api/v1/verify" \
        -H "Content-Type: application/json" \
        -H "idnorm-license-key: $IDNORM_LICENSE_KEY" \
        --data-binary @"$TMP_FILE"
 else
-  curl -X POST "$ENDPOINT/api/v1/scan" \
+  curl -X POST "$ENDPOINT/api/v1/verify" \
        -H "Content-Type: application/json" \
        --data-binary @"$TMP_FILE"
 fi
