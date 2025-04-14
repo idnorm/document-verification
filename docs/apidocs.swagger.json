@@ -107,17 +107,17 @@
     "v1BlurConfidenceLevel": {
       "type": "string",
       "enum": [
-        "BLUR_LEVEL_NO_BLUR",
-        "BLUR_LEVEL_1C",
-        "BLUR_LEVEL_2C",
-        "BLUR_LEVEL_3C",
-        "BLUR_LEVEL_4C",
-        "BLUR_LEVEL_5C",
-        "BLUR_LEVEL_6C",
-        "BLUR_LEVEL_7C"
+        "BLUR_CONFIDENCE_LEVEL_NO_BLUR",
+        "BLUR_CONFIDENCE_LEVEL_1",
+        "BLUR_CONFIDENCE_LEVEL_2",
+        "BLUR_CONFIDENCE_LEVEL_3",
+        "BLUR_CONFIDENCE_LEVEL_4",
+        "BLUR_CONFIDENCE_LEVEL_5",
+        "BLUR_CONFIDENCE_LEVEL_6",
+        "BLUR_CONFIDENCE_LEVEL_7"
       ],
-      "default": "BLUR_LEVEL_NO_BLUR",
-      "description": "- BLUR_LEVEL_NO_BLUR: BLUR_LEVEL_NO_BLUR - model is confident that there is minimal or no blur in the document image\n - BLUR_LEVEL_1C: BLUR_LEVEL_1C - (and all levels above) can be interpreted as \"blur\"\n - BLUR_LEVEL_2C: BLUR_LEVEL_2C\n - BLUR_LEVEL_3C: BLUR_LEVEL_3C\n - BLUR_LEVEL_4C: BLUR_LEVEL_4C\n - BLUR_LEVEL_5C: BLUR_LEVEL_5C\n - BLUR_LEVEL_6C: BLUR_LEVEL_6C\n - BLUR_LEVEL_7C: BLUR_LEVEL_7C",
+      "default": "BLUR_CONFIDENCE_LEVEL_NO_BLUR",
+      "description": "- BLUR_CONFIDENCE_LEVEL_NO_BLUR: BLUR_CONFIDENCE_LEVEL_NO_BLUR - model is confident that there is minimal or no blur in the document image\n - BLUR_CONFIDENCE_LEVEL_1: BLUR_CONFIDENCE_LEVEL_1 - (and all levels above) can be interpreted as \"blur\"\n - BLUR_CONFIDENCE_LEVEL_2: BLUR_CONFIDENCE_LEVEL_2\n - BLUR_CONFIDENCE_LEVEL_3: BLUR_CONFIDENCE_LEVEL_3\n - BLUR_CONFIDENCE_LEVEL_4: BLUR_CONFIDENCE_LEVEL_4\n - BLUR_CONFIDENCE_LEVEL_5: BLUR_CONFIDENCE_LEVEL_5\n - BLUR_CONFIDENCE_LEVEL_6: BLUR_CONFIDENCE_LEVEL_6\n - BLUR_CONFIDENCE_LEVEL_7: BLUR_CONFIDENCE_LEVEL_7",
       "title": "Blur Confidence Level Enum"
     },
     "v1Checks": {
@@ -304,17 +304,17 @@
     "v1GlareConfidenceLevel": {
       "type": "string",
       "enum": [
-        "GLARE_LEVEL_NO_GLARE",
-        "GLARE_LEVEL_1G",
-        "GLARE_LEVEL_2G",
-        "GLARE_LEVEL_3G",
-        "GLARE_LEVEL_4G",
-        "GLARE_LEVEL_5G",
-        "GLARE_LEVEL_6G",
-        "GLARE_LEVEL_7G"
+        "GLARE_CONFIDENCE_LEVEL_NO_GLARE",
+        "GLARE_CONFIDENCE_LEVEL_1",
+        "GLARE_CONFIDENCE_LEVEL_2",
+        "GLARE_CONFIDENCE_LEVEL_3",
+        "GLARE_CONFIDENCE_LEVEL_4",
+        "GLARE_CONFIDENCE_LEVEL_5",
+        "GLARE_CONFIDENCE_LEVEL_6",
+        "GLARE_CONFIDENCE_LEVEL_7"
       ],
-      "default": "GLARE_LEVEL_NO_GLARE",
-      "description": "- GLARE_LEVEL_NO_GLARE: GLARE_LEVEL_NO_GLARE - model is confident that there is minimal or no blur in the document image\n - GLARE_LEVEL_1G: GLARE_LEVEL_1G - (and all levels above) can be interpreted as \"glare\"\n - GLARE_LEVEL_2G: GLARE_LEVEL_2G\n - GLARE_LEVEL_3G: GLARE_LEVEL_3G\n - GLARE_LEVEL_4G: GLARE_LEVEL_4G\n - GLARE_LEVEL_5G: GLARE_LEVEL_5G\n - GLARE_LEVEL_6G: GLARE_LEVEL_6G\n - GLARE_LEVEL_7G: GLARE_LEVEL_7G",
+      "default": "GLARE_CONFIDENCE_LEVEL_NO_GLARE",
+      "description": "- GLARE_CONFIDENCE_LEVEL_NO_GLARE: GLARE_CONFIDENCE_LEVEL_NO_GLARE - model is confident that there is minimal or no blur in the document image\n - GLARE_CONFIDENCE_LEVEL_1: GLARE_CONFIDENCE_LEVEL_1 - (and all levels above) can be interpreted as \"glare\"\n - GLARE_CONFIDENCE_LEVEL_2: GLARE_CONFIDENCE_LEVEL_2\n - GLARE_CONFIDENCE_LEVEL_3: GLARE_CONFIDENCE_LEVEL_3\n - GLARE_CONFIDENCE_LEVEL_4: GLARE_CONFIDENCE_LEVEL_4\n - GLARE_CONFIDENCE_LEVEL_5: GLARE_CONFIDENCE_LEVEL_5\n - GLARE_CONFIDENCE_LEVEL_6: GLARE_CONFIDENCE_LEVEL_6\n - GLARE_CONFIDENCE_LEVEL_7: GLARE_CONFIDENCE_LEVEL_7",
       "title": "Glare Confidence Level Enum"
     },
     "v1ImageChecks": {
