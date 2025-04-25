@@ -45,6 +45,7 @@ services:
       echo 'All model folders already exist, skipping copy.'; \
       fi"
   serving:
+    restart: unless-stopped
     image: us-central1-docker.pkg.dev/idnorm/idnorm-pub/serving:v0.1.1-skylake
     depends_on:
       model-dl:
@@ -72,6 +73,7 @@ services:
           cpus: "${SERVING_NUM_CPU}"
 
   docver:
+    restart: unless-stopped
     image: us-central1-docker.pkg.dev/idnorm/idnorm-pub/dv:${DV_VERSION}
     environment:
       DV_LICENSE_KEY: ${DV_LICENSE_KEY}
