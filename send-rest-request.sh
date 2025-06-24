@@ -29,7 +29,7 @@ fi
 # Write JSON payload with base64-encoded image
 {
   echo -n '{"firstImage": "'
-  base64 "$IMAGE_PATH" | tr -d '\n'
+  base64 -i "$IMAGE_PATH" | tr -d '\n'
   echo -n '", "secondImage": "'
   echo -n "$img2Base64"
   echo -n '"}'
