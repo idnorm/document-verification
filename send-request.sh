@@ -21,7 +21,7 @@ fi
 TMP_FILE=$(mktemp)
 
 if [ -f "$IMAGE_PATH2" ]; then
-  img2Base64=$(base64 "$IMAGE_PATH2" | tr -d '\n')
+  img2Base64=$(base64 -i "$IMAGE_PATH2" | tr -d '\n')
 else
   img2Base64=""
 fi
