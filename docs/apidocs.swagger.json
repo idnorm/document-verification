@@ -616,6 +616,10 @@
               "$ref": "#/definitions/v1BarcodeCheck"
             }
           ]
+        },
+        "hasSuspiciousContent": {
+          "type": "boolean",
+          "title": "Suspicious content detected"
         }
       },
       "title": "Result of performing various data consistency and validity checks"
@@ -1023,6 +1027,10 @@
               "$ref": "#/definitions/v1ScreenConfidenceLevel"
             }
           ]
+        },
+        "handPresent": {
+          "type": "boolean",
+          "title": "Checks if hand is present on the image"
         }
       },
       "title": "Updated Liveness message using confidence levels"
