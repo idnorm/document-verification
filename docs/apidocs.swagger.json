@@ -179,34 +179,16 @@
       "description": "- UNKNOWN: Unknown\n - MALE: Male\n - FEMALE: Female",
       "title": "Sex - enumeration of registered genders"
     },
-    "VerificationResultExtractionData": {
+    "VerificationRequestConfig": {
       "type": "object",
       "properties": {
-        "classification": {
-          "title": "classification holds detected document class. Will be empty if status is STATUS_FRONT_SIDE_NOT_FOUND or STATUS_NOT_SUPPORTED",
-          "allOf": [
-            {
-              "$ref": "#/definitions/v1DocumentClass"
-            }
-          ]
+        "excludeExtractionData": {
+          "type": "boolean",
+          "title": "If true, the VerificationSessionResponse's extraction field will be empty"
         },
-        "data": {
-          "title": "data holds all information extracted from both sides of the document",
-          "allOf": [
-            {
-              "$ref": "#/definitions/v1DocumentData"
-            }
-          ]
-        },
-        "frontSideDocumentImage": {
-          "type": "string",
-          "format": "byte",
-          "title": "Optional, empty by default, returned if specified in requests \"config\" field.\nWill empty if document detection failed on the front image in the request"
-        },
-        "backSideDocumentImage": {
-          "type": "string",
-          "format": "byte",
-          "title": "Optional, empty by default, returned if specified in requests \"config\" field.\nWill empty if document detection failed on the back image in the request"
+        "excludeExtractionDocumentImages": {
+          "type": "boolean",
+          "title": "If true, the VerificationSessionResponse's extraction field will not include\nthe document images"
         }
       }
     },
@@ -303,6 +285,14 @@
           "allOf": [
             {
               "$ref": "#/definitions/v1DataCheck"
+            }
+          ]
+        },
+        "extraction": {
+          "title": "Extraction data",
+          "allOf": [
+            {
+              "$ref": "#/definitions/v1ExtractionData"
             }
           ]
         }
@@ -887,6 +877,37 @@
       ],
       "default": "DOCUMENT_TYPE_NOT_AVAILABLE",
       "description": "DocumentType - an enum of supported document types.\nThere are many countries and many document types. To see the full list of\nsupported document types in each country and/or region for our latest release please see\nthe [documentation](https://github.com/idnorm/id-extraction/blob/master/docs/document_types_by_country_and_region.md).\n\n - DOCUMENT_TYPE_NOT_AVAILABLE: Not available\n - DOCUMENT_TYPE_ADDRESS_CARD: ADDRESS_CARD\n - DOCUMENT_TYPE_ALIEN_IDENTIFICATION_DOCUMENT: ALIEN_IDENTIFICATION_DOCUMENT\n - DOCUMENT_TYPE_ASYLUM_SEEKER_CARD: ASYLUM_SEEKER_CARD\n - DOCUMENT_TYPE_BORDER_CROSSING_CARD: BORDER_CROSSING_CARD\n - DOCUMENT_TYPE_CITIZENSHIP_CERTIFICATE: CITIZENSHIP_CERTIFICATE\n - DOCUMENT_TYPE_CONSULAR_IDENTIFICATION_DOCUMENT: CONSULAR_IDENTIFICATION_DOCUMENT\n - DOCUMENT_TYPE_CONSULAR_PASSPORT: CONSULAR_PASSPORT\n - DOCUMENT_TYPE_CONSULAR_VOTER_IDENTIFICATION_DOCUMENT: CONSULAR_VOTER_IDENTIFICATION_DOCUMENT\n - DOCUMENT_TYPE_DRIVERS_LICENSE: DRIVERS_LICENSE\n - DOCUMENT_TYPE_DRIVERS_LICENSE_AND_SERVICES_CARD: DRIVERS_LICENSE_AND_SERVICES_CARD\n - DOCUMENT_TYPE_DRIVER_CARD: DRIVER_CARD\n - DOCUMENT_TYPE_DRIVER_PRIVILEGE_CARD: DRIVER_PRIVILEGE_CARD\n - DOCUMENT_TYPE_DRIVER_QUALIFICATION_CARD: DRIVER_QUALIFICATION_CARD\n - DOCUMENT_TYPE_EMPLOYMENT_PASS: EMPLOYMENT_PASS\n - DOCUMENT_TYPE_EXIT_ENTRY_PERMIT: EXIT_ENTRY_PERMIT\n - DOCUMENT_TYPE_E_ID: E_ID\n - DOCUMENT_TYPE_FIN_CARD: FIN_CARD\n - DOCUMENT_TYPE_GLOBAL_ENTRY_CARD: GLOBAL_ENTRY_CARD\n - DOCUMENT_TYPE_GREEN_CARD: GREEN_CARD\n - DOCUMENT_TYPE_IDENTIFICATION_DOCUMENT: IDENTIFICATION_DOCUMENT\n - DOCUMENT_TYPE_IMMIGRANT_VISA: IMMIGRANT_VISA\n - DOCUMENT_TYPE_INDIVIDUAL_NUMBER_CARD: INDIVIDUAL_NUMBER_CARD\n - DOCUMENT_TYPE_INTERNAL_PASSPORT: INTERNAL_PASSPORT\n - DOCUMENT_TYPE_MAINLAND_TRAVEL_PERMIT_TAIWAN: MAINLAND_TRAVEL_PERMIT_TAIWAN\n - DOCUMENT_TYPE_MILITARY_IDENTIFICATION_DOCUMENT: MILITARY_IDENTIFICATION_DOCUMENT\n - DOCUMENT_TYPE_MINORS_IDENTIFICATION_DOCUMENT: MINORS_IDENTIFICATION_DOCUMENT\n - DOCUMENT_TYPE_MINORS_PASSPORT: MINORS_PASSPORT\n - DOCUMENT_TYPE_MINORS_SERVICES_CARD: MINORS_SERVICES_CARD\n - DOCUMENT_TYPE_MULTI_PURPOSE_IDENTIFICATION_DOCUMENT: MULTI_PURPOSE_IDENTIFICATION_DOCUMENT\n - DOCUMENT_TYPE_MY_KAD: MY_KAD\n - DOCUMENT_TYPE_MY_KAS: MY_KAS\n - DOCUMENT_TYPE_MY_KID: MY_KID\n - DOCUMENT_TYPE_MY_POLIS: MY_POLIS\n - DOCUMENT_TYPE_MY_PR: MY_PR\n - DOCUMENT_TYPE_MY_TENTERA: MY_TENTERA\n - DOCUMENT_TYPE_NBI_CLEARANCE_DOCUMENT: NBI_CLEARANCE_DOCUMENT\n - DOCUMENT_TYPE_NEXT_GEN_ALIEN_PASSPORT: NEXT_GEN_ALIEN_PASSPORT\n - DOCUMENT_TYPE_NEXT_GEN_PASSPORT: NEXT_GEN_PASSPORT\n - DOCUMENT_TYPE_NEXT_GEN_REFUGEE_PASSPORT: NEXT_GEN_REFUGEE_PASSPORT\n - DOCUMENT_TYPE_NEXUS_CARD: NEXUS_CARD\n - DOCUMENT_TYPE_PASS: PASS\n - DOCUMENT_TYPE_PASSPORT: PASSPORT\n - DOCUMENT_TYPE_PASSPORT_CARD: PASSPORT_CARD\n - DOCUMENT_TYPE_PERMANENT_ACCOUNT_NUMBER_CARD: PERMANENT_ACCOUNT_NUMBER_CARD\n - DOCUMENT_TYPE_POSTAL_IDENTIFICATION_DOCUMENT: POSTAL_IDENTIFICATION_DOCUMENT\n - DOCUMENT_TYPE_PROFESSIONAL_CARD: PROFESSIONAL_CARD\n - DOCUMENT_TYPE_PROFESSIONAL_DRIVERS_LICENSE: PROFESSIONAL_DRIVERS_LICENSE\n - DOCUMENT_TYPE_PROOF_OF_AGE_CARD: PROOF_OF_AGE_CARD\n - DOCUMENT_TYPE_PROOF_OF_REGISTRATION: PROOF_OF_REGISTRATION\n - DOCUMENT_TYPE_PROVISIONAL_DRIVERS_LICENSE: PROVISIONAL_DRIVERS_LICENSE\n - DOCUMENT_TYPE_REFUGEE_IDENTIFICATION_DOCUMENT: REFUGEE_IDENTIFICATION_DOCUMENT\n - DOCUMENT_TYPE_RESIDENCE_PERMIT: RESIDENCE_PERMIT\n - DOCUMENT_TYPE_RESIDENT_IDENTIFICATION_DOCUMENT: RESIDENT_IDENTIFICATION_DOCUMENT\n - DOCUMENT_TYPE_SERVICES_CARD: SERVICES_CARD\n - DOCUMENT_TYPE_SIS_ID: SIS_ID\n - DOCUMENT_TYPE_SOCIAL_SECURITY_CARD: SOCIAL_SECURITY_CARD\n - DOCUMENT_TYPE_SPECIAL_IDENTIFICATION_DOCUMENT: SPECIAL_IDENTIFICATION_DOCUMENT\n - DOCUMENT_TYPE_S_PASS: S_PASS\n - DOCUMENT_TYPE_TAX_IDENTIFICATION_DOCUMENT: TAX_IDENTIFICATION_DOCUMENT\n - DOCUMENT_TYPE_TEMPORARY_PROTECTION_PERMIT: TEMPORARY_PROTECTION_PERMIT\n - DOCUMENT_TYPE_TEMPORARY_RESIDENCE_PERMIT: TEMPORARY_RESIDENCE_PERMIT\n - DOCUMENT_TYPE_TRIBAL_IDENTIFICATION_DOCUMENT: TRIBAL_IDENTIFICATION_DOCUMENT\n - DOCUMENT_TYPE_TWIC_CARD: TWIC_CARD\n - DOCUMENT_TYPE_UNIFORMED_SERVICES_IDENTIFICATION_DOCUMENT: UNIFORMED_SERVICES_IDENTIFICATION_DOCUMENT\n - DOCUMENT_TYPE_VETERAN_IDENTIFICATION_DOCUMENT: VETERAN_IDENTIFICATION_DOCUMENT\n - DOCUMENT_TYPE_VISA: VISA\n - DOCUMENT_TYPE_VOTER_IDENTIFICATION_DOCUMENT: VOTER_IDENTIFICATION_DOCUMENT\n - DOCUMENT_TYPE_WEAPON_PERMIT: WEAPON_PERMIT\n - DOCUMENT_TYPE_WORK_PERMIT: WORK_PERMIT\n - DOCUMENT_TYPE_IKAD: iKAD"
+    },
+    "v1ExtractionData": {
+      "type": "object",
+      "properties": {
+        "classification": {
+          "title": "classification holds detected document class. Will be empty if status is STATUS_FRONT_SIDE_NOT_FOUND or STATUS_NOT_SUPPORTED",
+          "allOf": [
+            {
+              "$ref": "#/definitions/v1DocumentClass"
+            }
+          ]
+        },
+        "data": {
+          "title": "data holds all information extracted from both sides of the document",
+          "allOf": [
+            {
+              "$ref": "#/definitions/v1DocumentData"
+            }
+          ]
+        },
+        "frontSideDocumentImage": {
+          "type": "string",
+          "format": "byte",
+          "title": "Optional, empty by default, returned if specified in requests \"config\" field.\nWill be empty if document detection failed on the front image in the request"
+        },
+        "backSideDocumentImage": {
+          "type": "string",
+          "format": "byte",
+          "title": "Optional, empty by default, returned if specified in requests \"config\" field.\nWill be empty if document detection failed on the back image in the request"
+        }
+      }
     },
     "v1FieldChecks": {
       "type": "object",
@@ -1698,6 +1719,14 @@
           "type": "string",
           "format": "byte",
           "title": "Second image - optional, if performing a check of a one sided document this field is not required"
+        },
+        "config": {
+          "title": "Optional configuration",
+          "allOf": [
+            {
+              "$ref": "#/definitions/VerificationRequestConfig"
+            }
+          ]
         }
       },
       "title": "Verification request"
@@ -1739,7 +1768,7 @@
           "$ref": "#/definitions/v1DataCheck"
         },
         "extraction": {
-          "$ref": "#/definitions/VerificationResultExtractionData"
+          "$ref": "#/definitions/v1ExtractionData"
         }
       }
     },
